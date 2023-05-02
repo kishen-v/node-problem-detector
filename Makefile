@@ -22,8 +22,8 @@
 all: build
 
 # PLATFORMS is the set of OS_ARCH that NPD can build against.
-LINUX_PLATFORMS=linux_amd64 linux_arm64
-DOCKER_PLATFORMS=linux/amd64,linux/arm64
+LINUX_PLATFORMS=linux_amd64 linux_arm64 linux_ppc64le
+DOCKER_PLATFORMS=linux/amd64,linux/arm64 linux/ppc64le
 PLATFORMS=$(LINUX_PLATFORMS) windows_amd64
 
 # VERSION is the version of the binary.
@@ -177,6 +177,24 @@ output/linux_arm64/bin/%: $(PKG_SOURCES)
 output/linux_arm64/test/bin/%: $(PKG_SOURCES)
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=$(CGO_ENABLED) GO111MODULE=on \
 	  CC=aarch64-linux-gnu-gcc go build \
+		-mod vendor \
+		-o $@ \
+		-tags "$(LINUX_BUILD_TAGS)" \
+		./test/e2e/$(subst -,,$*)
+
+output/linux_ppc64le/bin/%: $(PKG_SOURCES)
+	GOOS=linux GOARCH=ppc64le CGO_ENABLED=$(CGO_ENABLED) GO111MODULE=on \
+	  CC=gcc-powerpc64le-linux-gnu go build \
+		-mod vendor \
+		-o $@ \
+		-ldflags '-X $(PKG)/pkg/version.version=$(VERSION)' \
+		-tags "$(LINUX_BUILD_TAGS)" \
+		./cmd/$(subst -,,$*)
+	touch $@
+
+output/linux_ppc64le/test/bin/%: $(PKG_SOURCES)
+	GOOS=linux GOARCH=ppc64le CGO_ENABLED=$(CGO_ENABLED) GO111MODULE=on \
+	  CC=gcc-powerpc64le-linux-gnu go build \
 		-mod vendor \
 		-o $@ \
 		-tags "$(LINUX_BUILD_TAGS)" \

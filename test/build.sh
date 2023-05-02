@@ -65,7 +65,7 @@ function get-version() {
 
 function install-lib() {
   apt-get update
-  apt-get install -y libsystemd-dev gcc-aarch64-linux-gnu
+  apt-get install -y libsystemd-dev gcc-aarch64-linux-gnu gcc-powerpc64le-linux-gnu go build
 }
 
 function write-env-file() {
