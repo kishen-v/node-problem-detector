@@ -19,7 +19,8 @@ LABEL maintainer="Andy Xie <andy.xning@gmail.com>"
 ENV GOPATH /gopath/
 ENV PATH $GOPATH/bin:$PATH
 
-RUN apt-get update --fix-missing && apt-get --yes install libsystemd-dev gcc-aarch64-linux-gnu
+RUN apt-get update --fix-missing && apt-get --yes install libsystemd-dev gcc-aarch64-linux-gnu gcc-powerpc64le-linux-gnu
+
 RUN go version
 
 COPY . /gopath/src/k8s.io/node-problem-detector/
